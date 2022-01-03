@@ -1,5 +1,4 @@
 from quopri import decodestring
-
 from requests import GetRequests, PostRequests
 
 
