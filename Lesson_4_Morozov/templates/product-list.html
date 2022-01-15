@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}бесПолезные товары | Товары{% endblock %}
+{% block main %}
+
+<section id="main" class="wrapper style1">
+    <header class="major">
+        <h2>Товары</h2>
+    </header>
+
+    <div class="container">
+
+        <!-- Content -->
+        <section id="content">
+
+            {% if name %}
+            <h3>Категория: "{{name}}"</h3>
+            {% else %}
+            <h3>Все товары</h3>
+            {% endif %}
+
+            {% if objects_list %}
+            <ul>
+                {% for item in objects_list %}
+                <li>
+                    {{item.name}}
+                    <a href="/copy-product/?name={{item.name}}">
+<!--                        <em>создать копию</em>-->
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>К сожалению в данной категории товаров нет.</p>
+            {% endif %}
+
+            <a class="button small" href="/create-product/?id={{id}}">Добавить товар</a>
+
+        </section>
+    </div>
+
+
+</section>
+
+{% endblock %}

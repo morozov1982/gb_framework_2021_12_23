@@ -1,0 +1,11 @@
+<header id="header" class="skel-layers-fixed">
+    <h1><a href="/"><span>бес</span>Полезные товары</a>
+    </h1>
+    <nav id="nav">
+        <ul>
+            {% for item in main_menu %}
+                <li><a href="{{ main_menu[item] }}">{{ item }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+</header>

@@ -8,13 +8,25 @@
         <!-- Content -->
         <section id="content">
             <!--            <a href="#" class="image fit"><img src="images/pic07.jpg" alt=""/></a>-->
-            <h3>Сайт в разработке</h3>
-            <p>Скоро здесь появятся предложения от которых можно и отказаться.
-                Не будь обманут ни кем, не покупай подделки на других сайтах.
-                Зачем&nbsp;доверять всяким мошенникам, если можно быть
-                облопошеным
-                здесь!
-            </p>
+
+            <h3>Категории товаров</h3>
+
+            {% if objects_list %}
+                <ul>
+                    {% for item in objects_list %}
+                    <li>
+                        <a href="/products/?id={{item.id}}">{{item.name}}</a>
+                        ({{item.product_count()}} товаров)
+                    </li>
+                    {% endfor %}
+                </ul>
+                <a href="/create-category/" class="button special small">создать категорию</a>
+
+            {% else %}
+            <p>Пока категорий нет, но вы можете
+                <a href="/create-category/">создать категорию</a>.</p>
+            {% endif %}
+
             <h3>Планируем начать поставки</h3>
             <ul>
                 <li>Чего-нибудь произведённого из воздуха;</li>

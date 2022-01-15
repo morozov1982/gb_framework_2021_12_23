@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}бесПолезные товары | Добавление товара{% endblock %}
+{% block style %}
+    {% include "inc/inc-style.html" %}
+    {% include "inc/inc-contacts-style.html" %}
+{% endblock %}
+{% block main %}
+
+<section id="main" class="wrapper style1">
+    <header class="major">
+        <h2>Добавление товара</h2>
+    </header>
+
+    <div class="container">
+
+        <!-- Content -->
+        <section id="content">
+
+            {% if name %}
+            <h3>Категория: "{{name}}"</h3>
+            {% endif %}
+
+            <form method="post">
+                <div class="row uniform">
+                    <div class="6u 12u(3)">
+                        <input type="text" name="name" id="name"
+                               placeholder="Название">
+                    </div>
+                    <div class="6u 12u(3)">
+                        <input type="submit" value="Добавить">
+                    </div>
+                </div>
+            </form>
+            <div>
+                <a href="/products/?id={{id}}">&larr;&nbsp;назад</a>
+            </div>
+
+        </section>
+    </div>
+
+
+</section>
+
+{% endblock %}

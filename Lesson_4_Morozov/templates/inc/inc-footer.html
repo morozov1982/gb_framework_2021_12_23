@@ -13,11 +13,11 @@
                 class="label">Envelope</span></a></li>
     </ul> -->
     <ul class="menu">
-        <li><a href="{{ main_menu.index }}">Главная</a></li>
-        <li><a href="{{ main_menu.about }}">О нас</a></li>
-        <li><a href="{{ main_menu.contacts }}">Контакты</a></li>
+        {% for item in main_menu %}
+            <li><a href="{{ main_menu[item] }}">{{ item }}</a></li>
+        {% endfor %}
     </ul>
     <span class="copyright">
-	    &copy; Copyright. Все права нарушены: <a href="{{ main_menu.index }}">Бобёр Inc.</a>
+	    &copy; Copyright. Все права нарушены: <a href="/">Бобёр Inc.</a>
 	</span>
 </footer>
