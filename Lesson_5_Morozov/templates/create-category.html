@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}бесПолезные товары | Создание категории{% endblock %}
+{% block main %}
+
+<section id="main" class="wrapper style1">
+    <header class="major">
+        <h2>Создание категории</h2>
+    </header>
+
+    <div class="container">
+
+        <!-- Content -->
+        <section id="content">
+
+            <form method="post">
+                <div class="row uniform">
+                    <div class="6u 12u(3)">
+                        <input type="text" name="name" id="name"
+                               placeholder="Название">
+                    </div>
+                    <div class="6u 12u(3)">
+                        <input type="submit" value="Сохранить">
+                    </div>
+                </div>
+            </form>
+            <div>
+                {% if id %}
+                <a href="/categories/?id={{id}}">&larr;&nbsp;назад</a>
+                {% else %}
+                <a href="/">&larr;&nbsp;на главную</a>
+                {% endif %}
+            </div>
+
+        </section>
+    </div>
+
+
+</section>
+
+{% endblock %}
