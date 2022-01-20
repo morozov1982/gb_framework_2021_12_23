@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}бесПолезные товары | Клиенты{% endblock %}
+{% block main %}
+
+<section id="main" class="wrapper style1">
+    <header class="major">
+        <h2>Клиенты</h2>
+    </header>
+
+    <div class="container">
+
+        <!-- Content -->
+        <section id="content">
+
+            {% if objects_list %}
+            <ul>
+                {% for item in objects_list %}
+                <li>
+                    <strong>{{item.name}}</strong><br>
+                    {% if item.products %}Приобретения:
+                        <ul>
+                        {% for product in item.products %}
+                            <li>{{product.name}}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Клиентов пока совсем нет.</p>
+            {% endif %}
+
+            <a class="button small" href="/create-client/">Добавить клиента</a>
+            <a class="button small" href="/add-client/">Приобрести товар</a>
+
+
+        </section>
+    </div>
+
+
+</section>
+
+{% endblock %}

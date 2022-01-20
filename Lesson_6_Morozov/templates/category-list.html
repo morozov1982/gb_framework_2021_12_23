@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}бесПолезные товары | Список категорий{% endblock %}
+{% block title %}бесПолезные товары | Категории товаров{% endblock %}
 {% block main %}
 
 <section id="main" class="wrapper style1">
     <header class="major">
-        <h2>Список категорий</h2>
+        <h2>Категории товаров</h2>
     </header>
 
     <div class="container">
@@ -22,6 +22,8 @@
                 </li>
                 {% endfor %}
             </ul>
+            {% else %}
+            <p><strong>Категории пока ещё никто не создавал!</strong></p>
             {% endif %}
             <a href="/create-category/" class="button small">добавить категорию</a>
 

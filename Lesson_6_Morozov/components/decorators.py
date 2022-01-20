@@ -1,3 +1,4 @@
+"""Structural patterns"""
 from time import time
 
 

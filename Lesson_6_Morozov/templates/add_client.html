@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}бесПолезные товары | Приобретение товара{% endblock %}
+{% block main %}
+
+<section id="main" class="wrapper style1">
+    <header class="major">
+        <h2>Приобретение товара</h2>
+    </header>
+
+    <div class="container">
+
+        <!-- Content -->
+        <section id="content">
+            <form method="post">
+                <div class="row uniform">
+                    <div class="6u 12u(3)">
+                        <select size="3" name="product_name">
+                            {% for item in products %}
+                            <option value="{{item.name}}">{{item.name}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="6u 12u(3)">
+                        <select size="3" name="client_name">
+                            {% for item in clients %}
+                            <option value="{{item.name}}">{{item.name}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row uniform">
+                    <div class="12u">
+                        <input type="submit" value="Приобрести">
+                    </div>
+                </div>
+            </form>
+
+            <div>
+                <a href="/clients/">&larr;&nbsp;к списку клиентов</a>
+            </div>
+
+        </section>
+    </div>
+
+
+</section>
+
+{% endblock %}
