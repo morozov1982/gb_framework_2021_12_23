@@ -1,8 +1,13 @@
 """Creational patterns"""
 from copy import deepcopy
 from quopri import decodestring
+from sqlite3 import connect
 
 from .cbv import FileWriter, Subject
+from .unit_of_work import DomainObject
+
+
+connection = connect('db.sqlite')
 
 
 class User:
@@ -16,7 +21,7 @@ class Owner(User):
 
 
 # клиент (покупатель, заказчик)
-class Client(User):
+class Client(User, DomainObject):
     def __init__(self, name):
         self.products = []
         super().__init__(name)
@@ -112,6 +117,14 @@ class Engine:
         self.products = []
         self.categories = []
 
+        # наверное колхоз
+        self.clients = self.get_all_clients()
+
+    @staticmethod
+    def get_all_clients():
+        mapper = MapperRegistry.get_current_mapper('client')
+        return mapper.all()
+
     @staticmethod
     def create_user(type_, name):
         return UserFactory.create(type_, name)
@@ -137,6 +150,9 @@ class Engine:
         return None
 
     def get_client(self, name) -> Client:
+        print(f'self.clients: {self.clients}')
+        print(f'self.products: {self.products}')
+        print(f'self.categories: {self.categories}')
         for item in self.clients:
             if item.name == name:
                 return item
@@ -174,3 +190,92 @@ class Logger(metaclass=SingletonByName):
     def log(self, text):
         text = f'log: {text}'
         self.writer.write(text)
+
+
+class ClientMapper:
+    def __init__(self, connection):
+        self.connection = connection
+        self.cursor = connection.cursor()
+        self.tablename = 'client'
+
+    def all(self):
+        statement = f'SELECT * FROM {self.tablename}'
+        self.cursor.execute(statement)
+        result = []
+        for item in self.cursor.fetchall():
+            id, name = item
+            client = Client(name)
+            client.id = id
+            result.append(client)
+        return result
+
+    def find_by_id(self, id):
+        statement = f'SELECT id, name FROM {self.tablename} WHERE id=?'
+        self.cursor.execute(statement, (id,))
+        result = self.cursor.fetchone()
+        if result:
+            return Client(*result)
+        else:
+            raise RecordNotFoundException(f'record with id={id} not found')
+
+    def insert(self, obj):
+        statement = f'INSERT INTO {self.tablename} (name) VALUES (?)'
+        self.cursor.execute(statement, (obj.name,))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbCommitException(e.args)
+
+    def update(self, obj):
+        statement = f'UPDATE {self.tablename} SET name=? WHERE id=?'
+        self.cursor.execute(statement, (obj.name, obj.id))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbUpdateException(e.args)
+
+    def delete(self, obj):
+        statement = f'DELETE FROM {self.tablename} WHERE id=?'
+        self.cursor.execute(statement, (obj.id,))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbDeleteException(e.args)
+
+
+class MapperRegistry:
+    mappers = {
+        'client': ClientMapper,
+        # 'category': CategoryMapper,
+    }
+
+    @staticmethod
+    def get_mapper(obj):
+        if isinstance(obj, Client):
+            return ClientMapper(connection)
+        # elif isinstance(obj, Category):
+        #     return CategoryMapper(connection)
+
+    @staticmethod
+    def get_current_mapper(name):
+        return MapperRegistry.mappers[name](connection)
+
+
+class RecordNotFoundException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Record not found: {message}')
+
+
+class DbCommitException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db commit error: {message}')
+
+
+class DbUpdateException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db update error: {message}')
+
+
+class DbDeleteException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db delete error: {message}')

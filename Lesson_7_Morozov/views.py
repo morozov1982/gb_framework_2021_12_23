@@ -1,13 +1,17 @@
 from moroz_framework.templator import render
-from components.models import Engine, Logger
+from components.models import Engine, Logger, MapperRegistry
 from components.decorators import AppRoute, Debug
 from components.cbv import EmailNotifier, SmsNotifier, CreateView, ListView, \
     BaseSerializer
+from components.unit_of_work import UnitOfWork
 
 site = Engine()
 logger = Logger('main')
 email_notifier = EmailNotifier()
 sms_notifier = SmsNotifier()
+
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 routes = {}
 
@@ -169,12 +173,17 @@ class ClientCreateView(CreateView):
         name = site.decode_value(name)
         new_obj = site.create_user('client', name)
         site.clients.append(new_obj)
+        new_obj.mark_new()
+        UnitOfWork.get_current().commit()
 
 
 @AppRoute(routes=routes, url='/clients/')
 class ClientListView(ListView):
-    queryset = site.clients
     template_name = 'clients.html'
+
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('client')
+        return mapper.all()
 
 
 @AppRoute(routes=routes, url='/add-client/')
@@ -184,7 +193,8 @@ class AddClientToProductCreateView(CreateView):
     def get_context_data(self):
         context = super().get_context_data()
         context['products'] = site.products
-        context['clients'] = site.clients
+        # clients_mapper = MapperRegistry.get_current_mapper('client')
+        context['clients'] = site.clients  # clients_mapper.all()
         return context
 
     def create_obj(self, data: dict):
@@ -195,6 +205,8 @@ class AddClientToProductCreateView(CreateView):
         client_name = data['client_name']
         client_name = site.decode_value(client_name)
         client = site.get_client(client_name)
+
+        print(f'WWWWW: {product_name}, {client_name}, {product}, {client}')
 
         product.add_client(client)
 
